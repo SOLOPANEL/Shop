@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenMart - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
+    <style>
+        /* Light theme styling */
+        body {
+            background-color: #fafafa;
+            color: #333;
+        }
+        
+        /* Header styling */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* Navigation styling */
+        nav a {
+            color: #555;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: #7c3aed; /* Light purple accent */
+        }
+        
+        /* Hero section styling */
+        .hero-overlay {
+            background-color: rgba(255,255,255,0.7); /* Semi-transparent white overlay */
+        }
+        
+        /* Category cards styling */
+        .category-card {
+            background-color: white;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        /* Product cards styling */
+        .product-card {
+            background-color: white;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        /* Button styling */
+        .btn-primary {
+            background-color: #7c3aed;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #6d28d9;
+        }
+        
+        /* Testimonial section */
+        .testimonial-bg {
+            background-color: #f8f9fa;
+        }
+        
+        /* Newsletter section */
+        .newsletter-bg {
+            background-color: #7c3aed;
+        }
+        
+        /* Footer styling */
+        footer {
+            background-color: #2d3748;
+        }
+        
+        /* Cart sidebar styling - light version */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            max-width: 90%;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+            z-index: 999;
+            display: none;
+        }
+        
+        .cart-overlay.open {
+            display: block;
+        }
+        
+        /* Filter buttons */
+        .filter-btn {
+            background-color: #f3f4f6;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background-color: #7c3aed;
+            color: white;
+        }
+        
+        /* Cookie consent */
+        .cookie-consent {
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="m-0 p-0">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-gem text-purple-600 text-2xl"></i>
+                <span class="text-xl font-bold text-gray-800">ShopEase</span>
+            </div>
+
+            <nav class="hidden md:flex space-x-6 items-center font-medium">
+                <a href="index.html" class="hover:text-purple-600">Home</a>
+                <a href="#categories" class="hover:text-purple-600">Categories</a>
+                <a href="#shop" class="hover:text-purple-600">Features</a>
+                <a href="#testimonials" class="hover:text-purple-600">Testimonials</a>
+                <a href="#footer" class="hover:text-purple-600">Contact</a>
+
+                <div class="flex space-x-4 ml-4 text-xl">
+                    <a href="#" class="hover:text-purple-600"><i class="fas fa-search"></i></a>
+                    <a href="#" id="open-cart-desktop" class="hover:text-purple-600 relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count-desktop" class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </a>
+                    <a href="#" class="hover:text-purple-600"><i class="fas fa-heart"></i></a>
+                </div>
+            </nav>
+
+            <button id="menu-btn" class="md:hidden text-2xl text-gray-700">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden px-4 pb-4 space-y-4 font-medium bg-white">
+            <a href="index.html" class="block hover:text-purple-600">Home</a>
+            <a href="#categories" class="block hover:text-purple-600">Categories</a>
+            <a href="#shop" class="block hover:text-purple-600">Features</a>
+            <a href="#testimonials" class="block hover:text-purple-600">Testimonials</a>
+            <a href="#footer" class="block hover:text-purple-600">Contact</a>
+            
+            <div class="flex space-x-6 text-xl pt-2">
+                <a href="#" class="hover:text-purple-600"><i class="fas fa-search"></i></a>
+                <a href="#" id="open-cart-mobile" class="hover:text-purple-600 relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                </a>
+                <a href="#" class="hover:text-purple-600"><i class="fas fa-heart"></i></a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Hero Section with background image -->
+    <section 
+        class="relative h-screen w-full bg-cover bg-center flex items-center justify-center text-gray-800" 
+        style="background-image: url('Images/fashion1.jpg'); background-position: top;"
+        id="section">
+        <!-- IMAGE COMMENT: This is the hero section background image. Replace with your own image URL -->
+        <div class="absolute inset-0 bg-white bg-opacity-70"></div>
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">Make your own style</h1>
+            <p class="text-lg md:text-xl mb-6">Create your styles with OpenMart</p>
+        </div>
+    </section> 
+    
+    <!-- Categories Section -->
+    <section class="py-16 px-4 bg-white" id="categories">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">Shop by Category</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="category-card rounded-xl shadow-sm overflow-hidden flex flex-col">
+                    <!-- IMAGE COMMENT: Men's category image -->
+                    <img src="Images/mensfashon1.jpg" alt="Men's Collection" class="w-full h-30 object-cover" />
+                    <div class="p-6 text-center flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Men's Collection</h3>
+                            <p class="text-gray-600 mb-4">Trendy and classic outfits for every occasion.</p>
+                        </div>
+                        <a href="/shop.html" class="inline-block btn-primary py-2 px-5 rounded-full">Shop Now</a>
+                    </div>
+                </div>
+
+                <div class="category-card rounded-xl shadow-sm overflow-hidden flex flex-col">
+                    <!-- IMAGE COMMENT: Women's category image -->
+                    <img src="Images/womensfashion1.jpg" class="w-full h-30 object-cover" />
+                    <div class="p-6 text-center flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Women's Collection</h3>
+                            <p class="text-gray-600 mb-4">Elegant styles and new fashion trends for women.</p>
+                        </div>
+                        <a href="/shop.html" class="inline-block btn-primary py-2 px-5 rounded-full">Shop Now</a>
+                    </div>
+                </div>
+
+                <div class="category-card rounded-xl shadow-sm overflow-hidden flex flex-col">
+                    <!-- IMAGE COMMENT: Kids' category image -->
+                    <img src="Images/kidsfashion1.webp" alt="Kids' Collection" class="w-full h-30 object-cover" />
+                    <div class="p-6 text-center flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Kids' Collection</h3>
+                            <p class="text-gray-600 mb-4">Colorful and comfy outfits for little stars.</p>
+                        </div>
+                        <a href="/shop.html" class="inline-block btn-primary py-2 px-5 rounded-full">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Products Section -->
+    <section class="py-16 px-4 bg-gray-50" id="shop">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">Featured Products</h2>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="filter-btn active py-2 px-5 rounded-full" data-category="all">All</button>
+                <button class="filter-btn py-2 px-5 rounded-full" data-category="men">Men</button>
+                <button class="filter-btn py-2 px-5 rounded-full" data-category="women">Women</button>
+                <button class="filter-btn py-2 px-5 rounded-full" data-category="kids">Kids</button>
+                <button class="filter-btn py-2 px-5 rounded-full" data-category="accessories">Accessories</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="shopping-cards">
+                <!-- Product cards with images -->
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Casual T-Shirt product image -->
+                    <img src="Images/casualfasion1.webp" alt="T-Shirt" class="w-full h-30 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Casual Tees</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$24.99</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="1" data-product-name="Casual T-Shirt" data-product-price="25.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Sneakers product image -->
+                    <img src="Images/fashionsneakers1.jpg" alt="Sneakers" class="w-full h-30 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Fasion Sneakers</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$64.99</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="2" data-product-name="Stylish Sneakers" data-product-price="60.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="accessories">
+                    <!-- IMAGE COMMENT: Smart Watch product image -->
+                    <img src="https://th.bing.com/th/id/OIP.KzpqgOEteRSDHw2OuCXYmAHaFi?w=194&h=180&c=7&r=0&o=7&cb=iwp2&pid=1.7&rm=3" alt="Watch" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Smart Watch</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$120.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="3" data-product-name="Smart Watch" data-product-price="120.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="accessories">
+                    <!-- IMAGE COMMENT: Backpack product image -->
+                    <img src="Images/bagsfashion1.webp" alt="Backpack" class="w-full h-30 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Trendy Backpack</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$45.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="4" data-product-name="Trendy Backpack" data-product-price="45.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="accessories">
+                    <!-- IMAGE COMMENT: Sunglasses product image -->
+                    <img src="Images/sunglassfashion1.jpg" alt="Sunglasses" class="w-full h-30 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Sunglasses</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$30.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="5" data-product-name="Sunglasses" data-product-price="30.00">
+                        Add to Cart
+                    </button>
+                </div>
+                
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Red Sneakers product image -->
+                    <img src="https://images.pexels.com/photos/12725051/pexels-photo-12725051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Red Sneakers" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Red Sneakers</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$75.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="6" data-product-name="Red Sneakers" data-product-price="75.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="accessories">
+                    <!-- IMAGE COMMENT: Leather Wallet product image -->
+                    <img src="https://images.pexels.com/photos/167703/pexels-photo-167703.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Leather Wallet" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Leather Wallet</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$40.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="7" data-product-name="Leather Wallet" data-product-price="40.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Denim Jacket product image -->
+                    <img src="https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/24809874/2023/9/4/514e8234-1257-4c5a-880d-46552f8ab80a1693840193145RARERABBITMenBlueWashedDenimJacketwithPatchwork1.jpg" alt="Denim Jacket" class="w-full h-30 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Denim Jacket</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$85.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="8" data-product-name="Denim Jacket" data-product-price="85.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Running Shoes product image -->
+                    <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Running Shoes" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Running Shoes</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$90.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="9" data-product-name="Running Shoes" data-product-price="90.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: White T-Shirt product image -->
+                    <img src="https://images.pexels.com/photos/2315197/pexels-photo-2315197.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="White T-Shirt" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">White T-Shirt</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$20.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="10" data-product-name="White T-Shirt" data-product-price="20.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Blue Jeans product image -->
+                    <img src="https://images.pexels.com/photos/52518/jeans-pants-blue-shop-52518.jpeg" alt="Blue Jeans" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Blue Jeans</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$55.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="11" data-product-name="Blue Jeans" data-product-price="55.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="men">
+                    <!-- IMAGE COMMENT: Formal Shirt product image -->
+                    <img src="https://images.pexels.com/photos/9929575/pexels-photo-9929575.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Formal Shirt" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Formal Shirt</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$40.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="12" data-product-name="Formal Shirt" data-product-price="40.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="women">
+                    <!-- IMAGE COMMENT: Summer Dress product image -->
+                    <img src="https://images.pexels.com/photos/1449667/pexels-photo-1449667.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Women's Summer Dress" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Summer Dress</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$65.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="13" data-product-name="Summer Dress" data-product-price="65.00">
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div class="product-card rounded-lg p-4" data-category="kids">
+                    <!-- IMAGE COMMENT: Building Blocks product image -->
+                    <img src="https://images.pexels.com/photos/7887173/pexels-photo-7887173.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Kids' Building Blocks" class="w-full h-64 object-cover mb-4 rounded">
+                    <h3 class="text-lg font-semibold text-gray-800 product-name">Building Blocks</h3>
+                    <p class="text-purple-600 font-bold mt-1 product-price">$30.00</p>
+                    <button class="mt-4 w-full btn-primary py-2 px-4 rounded-full add-to-cart-btn"
+                                data-product-id="14" data-product-name="Building Blocks" data-product-price="30.00">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 px-4 testimonial-bg" id="testimonials">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-gray-800">What Our Customers Say</h2>
+            <div class="carousel w-full rounded-lg shadow-sm bg-white">
+                <div id="item1" class="carousel-item w-full flex flex-col items-center justify-center p-8">
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <!-- IMAGE COMMENT: Customer testimonial image -->
+                            <img src="https://images.pexels.com/photos/1486064/pexels-photo-1486064.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Customer 1" />
+                        </div>
+                    </div>
+                    <p class="text-lg italic mt-4 mb-4 max-w-2xl text-gray-600">"Super comfy and soft! Fits perfectly without being too tight or too loose. The fabric feels breathable and it holds up well after washing. Great for everyday wear!"</p>
+                    <p class="font-semibold text-purple-600">- Jane Doe</p>
+                </div>
+                <div id="item2" class="carousel-item w-full flex flex-col items-center justify-center p-8">
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <!-- IMAGE COMMENT: Customer testimonial image -->
+                            <img src="https://images.pexels.com/photos/14983798/pexels-photo-14983798/free-photo-of-a-man-with-curly-hair-leaning-against-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Customer 2" />
+                        </div>
+                    </div>
+                    <p class="text-lg italic mt-4 mb-4 max-w-2xl text-gray-600">"Comfortable to wear even with heavy loads. The padding on the straps is great, and it has lots of pockets for all my gear. The material is sturdy but could be a bit more water-resistant."</p>
+                    <p class="font-semibold text-purple-600">- John Smith</p>
+                </div>
+                <div id="item3" class="carousel-item w-full flex flex-col items-center justify-center p-8">
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <!-- IMAGE COMMENT: Customer testimonial image -->
+                            <img src="https://images.pexels.com/photos/19384231/pexels-photo-19384231/free-photo-of-yana-kravchuk.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Customer 3" />
+                        </div>
+                    </div>
+                    <p class="text-lg italic mt-4 mb-4 max-w-2xl text-gray-600">"Stylish and goes with everything. They’re comfy for walking around the city, but I wouldn’t wear them for intense activities. Solid quality and affordable."
+
+3. Leather Dress Shoes (Men's)</p>
+                    <p class="font-semibold text-purple-600">- Emily White</p>
+                </div>
+            </div>
+            <div class="flex justify-center w-full py-2 gap-2 mt-8">
+                <a href="#item1" class="btn btn-xs bg-purple-600 text-white">1</a>
+                <a href="#item2" class="btn btn-xs bg-gray-200">2</a>
+                <a href="#item3" class="btn btn-xs bg-gray-200">3</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-bg text-white py-16 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Join Our Newsletter</h2>
+            <p class="text-lg md:text-xl mb-8">Stay updated with the latest trends and exclusive offers.</p>
+            <form class="flex flex-col md:flex-row justify-center items-center gap-4">
+                <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    class="w-full md:w-auto px-6 py-3 rounded-full text-gray-800 focus:outline-none"
+                />
+                <button 
+                    type="submit" 
+                    class="bg-white text-purple-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full shadow-sm transition duration-300"
+                >
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-gray-400 py-10 px-4" id="footer">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">ShopEase</h3>
+                <p class="text-sm mb-4">Sjcem Ecs Department shop for the latest fashion trends and accessories.</p>
+                <div class="flex items-center space-x-2 text-sm">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Palghar Sjcem collage 401209</span>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#section" class="hover:text-white transition">Home</a></li>
+                    <li><a href="categories.html" class="hover:text-white transition">Categories</a></li>
+                    <li><a href="#shop" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#testimonials" class="hover:text-white transition">Testimonials</a></li>
+                    <li><a href="#footer" class="hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">Legal & Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">FAQs</a></li>
+                    <li><a href="#" class="hover:text-white transition">Shipping & Returns</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">Contact Us</h3>
+                <p class="text-sm mb-2">Email: 123shubham@sjcem.edu.in</p>
+                <p class="text-sm mb-4">Phone: +91 930716812</p>
+
+                <div class="flex space-x-4 text-xl">
+                    <a href="#" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm">
+            &copy; 2025 ShopEase. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-bold">Your Shopping Cart</h2>
+            <button id="close-cart" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+        <div id="cart-items" class="flex-grow p-4 overflow-y-auto">
+            <p class="text-gray-500 text-center" id="empty-cart-message">Your cart is empty.</p>
+        </div>
+        <div class="p-4 border-t">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-lg font-bold">Total:</span>
+                <span id="cart-total" class="text-lg font-bold text-purple-600">$0.00</span>
+            </div>
+            <button id="clear-cart" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-full mb-2">Clear Cart</button>
+            <button class="w-full btn-primary py-2 rounded-full">Checkout</button>
+        </div>
+    </div>
+
+    <div id="cart-overlay" class="cart-overlay"></div>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" class="cookie-consent fixed bottom-0 left-0 right-0 p-4 flex flex-col sm:flex-row items-center justify-between z-[10000]">
+        <
